@@ -95,6 +95,20 @@ app.get('/api/articles/:id', async function (req, res) {
   }
 });
 
+
+// Route for grabbing a specific Article by id, populate it with it's note
+app.delete('/api/articles/:id', async function (req, res) {
+  // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
+  try {
+    const dataDelete = await db.Article.findOneAndDelete({ _id: req.params.id })
+    //   .populate('note'); // ..and populate all of the notes associated with it
+    // res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: { name: err.name, message: err.message } });
+  }
+  
+});
+
 // Route for saving/updating an Article's associated Note
 app.post('/api/articles/:id', async function (req, res) {
   // Create a new note and pass the req.body to the entry
@@ -112,18 +126,20 @@ app.post('/api/articles/:id', async function (req, res) {
 
 
 // Route for grabbing a specific Article by id, populate it with it's note
-app.delete('/api/article/:id', async function (req, res) {
-  // const {} = req,body
+app.delete('/api/articles/:id', async function (req, res) {
   // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
   try {
-    // const data = await db.Article.findOne({ _id: req.params.id });
-    const dbArticle = await db.Article.findOneAndDelete({ _id: req.params.id }, { note: dbNote._id });
-    // res.json(dbArticle);
+    const data = await db.Article.findOne({ _id: req.params.id });
+    console.log(data.note);
+
+    const dbNoteDelete = await db.Note.findOneAndDelete({ _id: data.note});
+
+      // .remove('note'); // ..and populate all of the notes associated with it
+    // res.json(dbNoteDelete );
+    // res.json(removData);
   } catch (err) {
     res.status(500).json({ error: { name: err.name, message: err.message } });
-    // res.json(data);
-    // res.json(removData);
-  } 
+  }
 });
 
 
