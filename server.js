@@ -102,7 +102,7 @@ app.delete('/api/articles/:id', async function (req, res) {
   try {
     const dataDelete = await db.Article.findOneAndDelete({ _id: req.params.id })
     //   .populate('note'); // ..and populate all of the notes associated with it
-    // res.json(data);
+    res.sendStatus(200);
   } catch (err) {
     res.status(500).json({ error: { name: err.name, message: err.message } });
   }
@@ -126,7 +126,7 @@ app.post('/api/articles/:id', async function (req, res) {
 
 
 // Route for grabbing a specific Article by id, populate it with it's note
-app.delete('/api/articles/:id', async function (req, res) {
+app.delete('/api/notes/:id', async function (req, res) {
   // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
   try {
     const data = await db.Article.findOne({ _id: req.params.id });

@@ -32,7 +32,7 @@ $(document).on('click', 'p', function () {
     .then(function (data) {
       console.log(data);
       // The title of the article
-      $('#notes').append('<h2>' + data.title + '</h2>');
+      $('#notes').append('<h2>' + data && data.title + '</h2>');
       // An input to enter a new title
       $('#notes').append('<input id=\'titleinput\' name=\'title\' >');
       // A textarea to add a new note body
@@ -82,7 +82,7 @@ $(document).on('click', '#savenote', function () {
 
 
 
-// When you click the savenote button
+// When you click the dletenote button
 $(document).on('click', '#deletenote', function () {
   // Grab the id associated with the article from the submit button
   const thisId = $(this).attr('data-id');
@@ -90,39 +90,7 @@ $(document).on('click', '#deletenote', function () {
   // Run a POST request to change the note, using what's entered in the inputs
   $.ajax({
     method: 'DELETE',
-    url: '/api/articles/' + thisId,
-    // data: {
-    //   // Value taken from title input
-    //   title: $('#titleinput').val(),
-    //   // Value taken from note textarea
-    //   body: $('#bodyinput').val(),
-    // },
-  })
-  // With that done
-  .then(function (data) {
-    // Log the response
-    console.log(data);
-
-    $('#notes').empty();
-  });
-
-
-  // Also, remove the values entered in the input and textarea for note entry
-  $('#titleinput').val('');
-  $('#bodyinput').val('');
-});
-
-
-
-// When you click the savenote button
-$(document).on('click', '.deletearticle', function () {
-  // Grab the id associated with the article from the submit button
-  const thisId = $(this).attr('data-id');
-
-  // Run a POST request to change the note, using what's entered in the inputs
-  $.ajax({
-    method: 'DELETE',
-    url: '/api/articles/' + thisId,
+    url: '/api/notes/' + thisId,
     // data: {
     //   // Value taken from title input
     //   title: $('#titleinput').val(),
@@ -133,10 +101,46 @@ $(document).on('click', '.deletearticle', function () {
     // With that done
     .then(function (data) {
       // Log the response
-      console.log('#'+thisId);
-      // Empty the notes section
-      $('#'+thisId).val('');
+      console.log(data);
+
+      $('#notes').empty();
     });
+
+
+  // Also, remove the values entered in the input and textarea for note entry
+  $('#titleinput').val('');
+  $('#bodyinput').val('');
+});
+
+
+
+// When you click the deletearticle button
+$(document).on('click', '.deletearticle', async function (event) {
+  event.stopPropagation()
+  // Grab the id associated with the article from the submit button
+  const thisId = $(this).attr('data-id');
+  console.log('#' + thisId);
+  // Run a POST request to change the note, using what's entered in the inputs
+  await fetch('/api/articles/' + thisId,
+    { method: 'DELETE' }
+
+  )
+
+
+  // data: {
+  //   // Value taken from title input
+  //   title: $('#titleinput').val(),
+  //   // Value taken from note textarea
+  //   body: $('#bodyinput').val(),
+  // },
+
+// With that done
+
+// Log the response
+console.log('#' + thisId);
+// Empty the notes section
+window.location.reload()
+
 });
 
 
